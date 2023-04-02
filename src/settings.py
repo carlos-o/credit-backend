@@ -32,6 +32,10 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", False)
 
+URL = env('URL')
+
+PAGE_SIZE = env('PAGE_SIZE')
+
 ALLOWED_HOSTS = []
 
 
@@ -46,6 +50,9 @@ DJANGO_APPS = [
 ]
 
 LOCAL_APPS = [
+	'bank',
+	'client',
+	'credit'
 ]
 
 THIRD_PARTY_APPS = [
@@ -58,7 +65,7 @@ THIRD_PARTY_APPS = [
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
-	# "'csp.middleware.CSPMiddleware',
+	'csp.middleware.CSPMiddleware',
 	'corsheaders.middleware.CorsMiddleware',
 	"django.middleware.security.SecurityMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
@@ -141,6 +148,7 @@ USE_TZ = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = env.bool('EMAIL_TLS', False)
 EMAIL_USE_SSL = env.bool('EMAIL_SSL', False)
+EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
 EMAIL_PORT = env('EMAIL_PORT_USE')
@@ -155,9 +163,19 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Rest framework config
+REST_FRAMEWORK = {
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+	),
+	'PAGE_SIZE': PAGE_SIZE,
+	'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
+	'PAGINATE_BY_PARAM': 'page_size',
+	'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
+}
 
 # Cors Configurations
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
 CORS_ALLOW_HEADERS = (
 	'accept',
